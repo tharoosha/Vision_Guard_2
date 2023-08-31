@@ -33,6 +33,3 @@ This repository contains the codebase for an AI-powered CCTV surveillance system
 - IP cameras with accessible video streams.
 - Firebase project for push notifications.
 
-### Installation
-
-1. Clone this repository:
