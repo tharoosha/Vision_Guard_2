@@ -1,5 +1,5 @@
 
-# Vision_Guard (AI-Powered CCTV Surveillance System)
+# Vision Guard (AI-Powered CCTV Surveillance System)
 
 ![Alt text](https://github.com/tharoosha/Vision_Guard_2/blob/26d5894c2872fe13a9f727ef2d3542ad62284dd5/client/asserts/screens/Picture%201.png)
 
