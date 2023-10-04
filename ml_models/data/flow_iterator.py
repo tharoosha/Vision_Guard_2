@@ -82,7 +82,7 @@ class Flow(object):
 
         frames = []
         pre_idx = max(idxs)
-        
+
         for idx in idxs:
             assert (self.frame_count < 0) or (idx < self.frame_count), \
                 "idxs: {} > total valid frames({})".format(idxs, self.frame_count)
@@ -108,6 +108,7 @@ class Flow(object):
         frames = [None] * len(idxs)
         idx = min(idxs)
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
+        
         while idx <= max(idxs):
             res, frame = self.cap.read() # in BGR/GRAY format
             if not res:
