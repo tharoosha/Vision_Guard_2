@@ -1,4 +1,5 @@
 from data import flow_iterator
+from data.dataset_prep.ARID_prep import ARID_prep
 
 
 class Model(object):
@@ -14,8 +15,13 @@ class Model(object):
         return frame_count
 
 if __name__ == '__main__':
-    vid_path = 'ml_models/dataset/ARID v1.5/clips_v1.5_avi/Drink/Drink_1_1.avi'
+    vid_path = 'ml_models/dataset/ARID_v1.5/clips_v1.5_avi/Drink/Drink_1_1.avi'
 
-    model = Model(vid_path)
-    frame_count = model.process()
-    print(frame_count)
+    # model = Model(vid_path)
+    # frame_count = model.process()
+    # print(frame_count)
+    dataset = ARID_prep(root='ml_models/dataset/ARID_v1.5/clips_v1.5_avi', source='ml_models/data/settings/train_split1.txt', phase='train', modality='RGB')
+    print(dataset.classes)
+    print(dataset.clips)
+    print(dataset.class_to_idx)
+
