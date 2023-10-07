@@ -4,14 +4,14 @@ import os
 # dir_names = os.listdir("datasets/vedio/clips_v1.5")[0:-1]
 dir_names = os.listdir("ml_models/dataset/ARID_v1.5/clips_v1.5")
 # print(dir_names)
-print(os.listdir("ml_models/dataset/ARID_v1.5/clips_v1.5"))
+# print(os.listdir("ml_models/dataset/ARID_v1.5/clips_v1.5"))
 
 path='ml_models/data/ARID_frames/'
 for dir_name in dir_names:
     print("Processing: %s"%dir_name)
     path_dir = os.path.join(path,dir_name)
     video_names = os.listdir("ml_models/dataset/ARID_v1.5/clips_v1.5/"+dir_name)
-    print(video_names)
+    # print(video_names)
     for name in video_names:
         cap = cv2.VideoCapture(os.path.join("ml_models/dataset/ARID_v1.5/clips_v1.5/",dir_name,name))
         if not os.path.exists(path_dir):
