@@ -1,3 +1,3 @@
-from dataset_prep import ARID_prep
+from .ARID import ARID
 
-__all__ = ('ARID_prep')
+__all__ = ("ARID")

@@ -1,22 +1,24 @@
-import random
-import cv2
-import numpy as np
 import torch.utils.data as data
-import gamma_correction_2 as gamma
 
 import os
 import sys
+import random
+import numpy as np
+import cv2
+
+from. import img_to_gamma
 
 def find_classes(dir):
-    # The condition ensures that only directories (and not files) are added to the classes list
-    classes = [d for d in os.listdir(dir) if os.path.isdir(os.path.join(dir,d))]
+    classes = [d for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))]
     classes.sort()
-    classes_to_idx = {classes[i]: i for i in range(len(classes))}
-    return classes, classes_to_idx
+    class_to_idx = {classes[i]: i for i in range(len(classes))}
+    return classes, class_to_idx
 
 def make_dataset(root, source):
+    #root:'./datasets/hmdb51_frames'
+    #source:'./datasets/settings/hmdb51/train_rgb_split1.txt'
     if not os.path.exists(source):
-        print("Setting file %s for ARID doesn't exist." %(source))
+        print("Setting file %s for ARID doesn't exist." % (source))
         sys.exit()
     else:
         clips = []
@@ -24,21 +26,22 @@ def make_dataset(root, source):
             data = split_f.readlines()
             for line in data:
                 line_info = line.split()
-                clip_path = os.path.join(root, line_info[0])
-                duration = int(line_info[1])
-                target = int(line_info[2])
+                clip_path = os.path.join(root, line_info[0]) #Video name
+                duration = int(line_info[1]) #Video frame length
+                target = int(line_info[2]) #Video category
                 item = (clip_path, duration, target)
-                # item = (clip_path, target)
                 clips.append(item)
+    return clips #(Video name, frame length, label)
 
-    return clips 
-
+#  reads segments of video frames from a directory, processes them (resizing and color conversion),
+#  and then stacks them together to form a single 3D numpy array.
 def ReadSegmentRGB(path, offsets, new_height, new_width, new_length, is_color, name_pattern, duration):
     if is_color:
         cv_read_flag = cv2.IMREAD_COLOR
     else:
-        cv_read_flag = cv2.IMREAD_GRAYSCALE     # = 0
-    
+        cv_read_flag = cv2.IMREAD_GRAYSCALE
+
+    # use interpolation for resize the image
     interpolation = cv2.INTER_LINEAR
 
     sampled_list = []
@@ -66,6 +69,7 @@ def ReadSegmentRGB(path, offsets, new_height, new_width, new_length, is_color, n
     clip_input = np.concatenate(sampled_list, axis=2)
     return clip_input
 
+# Just like previous function but a small addition to gamma intensity correction 
 def ReadSegmentRGB_light(path, offsets, new_height, new_width, new_length, is_color, name_pattern, duration, gamma):
     if is_color:
         cv_read_flag = cv2.IMREAD_COLOR         # > 0
@@ -85,7 +89,7 @@ def ReadSegmentRGB_light(path, offsets, new_height, new_width, new_length, is_co
             frame_path = path + "/" + frame_name
             cv_img_origin = cv2.imread(frame_path, cv_read_flag)
             #####
-            cv_img_origin = gamma.gamma_intensity_correction(cv_img_origin,gamma)
+            cv_img_origin = img_to_gamma.gamma_intensity_correction(cv_img_origin,gamma)
             #####
             if cv_img_origin is None:
                print("Could not load file %s" % (frame_path))
@@ -101,6 +105,8 @@ def ReadSegmentRGB_light(path, offsets, new_height, new_width, new_length, is_co
     clip_input = np.concatenate(sampled_list, axis=2)
     return clip_input
 
+# reads segments of optical flow frames from a directory, preprocesses them (resizing),
+# and then stacks them together to form a single 3D numpy array.
 def ReadSegmentFlow(path, offsets, new_height, new_width, new_length, is_color, name_pattern,duration):
     if is_color:
         cv_read_flag = cv2.IMREAD_COLOR         # > 0
@@ -138,8 +144,8 @@ def ReadSegmentFlow(path, offsets, new_height, new_width, new_length, is_color, 
     clip_input = np.concatenate(sampled_list, axis=2)
     return clip_input
 
-class ARID_prep(data.Dataset):
-    
+class ARID(data.Dataset):
+
     def __init__(self,
                  root,
                  source,
@@ -155,11 +161,12 @@ class ARID_prep(data.Dataset):
                  target_transform=None,
                  video_transform=None,
                  ensemble_training = False,
-                 gamma= None):
-        
+                 gamma=None):
+
         classes, class_to_idx = find_classes(root)
         clips = make_dataset(root, source)
-        self.gamma = gamma
+        self.gamma=gamma
+        # clips:(Video name, frame length, tags)
 
         if len(clips) == 0:
             raise(RuntimeError("Found 0 video clips in subfolders of: " + root + "\n"
@@ -174,7 +181,7 @@ class ARID_prep(data.Dataset):
         self.class_to_idx = class_to_idx
         self.clips = clips
         self.ensemble_training = ensemble_training
-        
+
         if name_pattern:
             self.name_pattern = name_pattern
         else:
@@ -195,21 +202,19 @@ class ARID_prep(data.Dataset):
 
     def __getitem__(self, index):
         path, duration, target = self.clips[index]
-        duration = duration -1
-
-        # Frame length/number of blocks
+        # clips:(Video name, frame length, tags)
+        duration = duration - 1
         average_duration = int(duration / self.num_segments)
-        
-        # How many frames are left after taking 64 frames
+        # Frame length/number of blocks
         average_part_length = int(np.floor((duration-self.new_length) / self.num_segments))
-        
-        # A list contains the starting frames for each segment in the video
+        # How many frames are left after taking 64 frames?
         offsets = []
-
         for seg_id in range(self.num_segments):
-            if self.phase == 'train':
+            if self.phase == "train":
                 if average_duration >= self.new_length:
                     offset = random.randint(0, average_duration - self.new_length)
+                    # offset=2,
+                    # No +1 because randint(a,b) return a random integer N such that a <= N <= b.
                     offsets.append(offset + seg_id * average_duration)
                 elif duration >= self.new_length:
                     offset = random.randint(0, average_part_length)
@@ -227,9 +232,10 @@ class ARID_prep(data.Dataset):
                     offsets.append(0 + seg_id * increase)
             else:
                 print("Only phase train and val are supported.")
-
         
-        if self.modality == 'rgb':
+
+
+        if self.modality == "rgb":
             clip_input = ReadSegmentRGB(path,
                                         offsets,
                                         self.new_height,
@@ -260,6 +266,8 @@ class ARID_prep(data.Dataset):
         if self.video_transform is not None:
             clip_input,clip_input_light = self.video_transform(clip_input,clip_input_light)
         return clip_input,clip_input_light,target
+                
+
 
     def __len__(self):
         return len(self.clips)
