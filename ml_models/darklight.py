@@ -48,7 +48,7 @@ dataset_names = sorted(name for name in datasets.__all__)
 parser = argparse.ArgumentParser(description='PyTorch Two-Stream Action Recognition')
 
 parser.add_argument('--settings', metavar='DIR', default='./datasets/settings',
-                    help='path to datset setting files')
+                    help='path to dataset setting files')
 parser.add_argument('--dataset', '-d', default='ARID',
                     choices=["ucf101", "hmdb51", "smtV2", "window", "ARID"],
                     help='dataset: ucf101 | hmdb51 | smtV2')
@@ -61,36 +61,59 @@ parser.add_argument('--arch', '-a', default='dark_light',
 
 parser.add_argument('-s', '--split', default=1, type=int, metavar='S',
                     help='which split of data to work on (default: 1)')
+
+# “number of workers” parameter to a value greater than 0, the DataLoader will load data 
+# in parallel using multiple worker processes.
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 2)')
+
 parser.add_argument('--epochs', default=200, type=int, metavar='N',
                     help='number of total epochs to run')
+
 parser.add_argument('-b', '--batch-size', default=3, type=int,
                     metavar='N', help='mini-batch size (default: 8)')
+
+# why is this.. ?
 parser.add_argument('--iter-size', default=16, type=int,
                     metavar='I', help='iter size to reduce memory usage (default: 16)')
+
 parser.add_argument('--lr', '--learning-rate', default=1e-5, type=float,
                     metavar='LR', help='initial learning rate')
+
+# Momentum was designed to speed up learning in directions of low curvature, 
+# without becoming unstable in directions of high curvature.
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum (default: 0.9)')
+
 parser.add_argument('--weight-decay', '--wd', default=1e-3, type=float,
                     metavar='W', help='weight decay (default: 1e-3)')
+
+# why is this.. ?
 parser.add_argument('--print-freq', default=50, type=int,
                     metavar='N', help='print frequency (default: 400)')
+
+# why is this.. ?
 parser.add_argument('--save-freq', default=1, type=int,
                     metavar='N', help='save frequency (default: 1)')
+
 parser.add_argument('--num-seg', default=1, type=int,
                     metavar='N', help='Number of segments in dataloader (default: 1)')
+
 #parser.add_argument('--resume', default='./dene4', type=str, metavar='PATH',
 #                    help='path to latest checkpoint (default: none)')
+
 parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
                     help='evaluate model on validation set')
+
 parser.add_argument('-c', '--continue', dest='contine', action='store_true',
                     help='continue training')
+
 parser.add_argument('-g','--gamma', default=1,type=float,
                     help="the value of gamma")
+
 parser.add_argument('--both-flow', default='True',
                     help='give dark and light flow both')
+
 parser.add_argument('--no-attention', default=True, action='store_false', help="use attention to instead of linear")
 
 best_prec1 = 0
@@ -123,12 +146,13 @@ def main():
     height = 128
 
     saveLocation="./checkpoint/"+args.dataset+"_"+args.arch+"_split"+str(args.split)
+
     if not os.path.exists(saveLocation):
         os.makedirs(saveLocation)
     writer = SummaryWriter(saveLocation)
    
-    # create model
 
+    # create model
     if args.evaluate:
         print("Building validation model ... ")
         model = build_model_validate()
@@ -152,14 +176,14 @@ def main():
     criterion = nn.CrossEntropyLoss().to(device)
 
     
-    scheduler = lr_scheduler.ReduceLROnPlateau(
-        optimizer, 'min', patience=5, verbose=True)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
 
     print("Saving everything to directory %s." % (saveLocation))
     dataset='datasets/ARID_frames'
     
     cudnn.benchmark = True
     length=64
+    
     # Data transforming
     is_color = True
     scale_ratios = [1.0, 0.875, 0.75, 0.66]
