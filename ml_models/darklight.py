@@ -286,7 +286,7 @@ def main():
         if (epoch + 1) % args.save_freq == 0:
             checkpoint_name = "%03d_%s" % (epoch + 1, "checkpoint.pth.tar")
             if is_best:
-                print("Model son iyi olarak kaydedildi")
+                print("Model last recorded as good")
                 save_checkpoint({
                     'epoch': epoch + 1,
                     'arch': args.arch,
@@ -360,7 +360,7 @@ def build_model_continue():
     return model, startEpoch, optimizer, best_prec
 
 
-#进入
+# Entering
 def train(train_loader, model, criterion, optimizer, epoch):
     batch_time = AverageMeter()
     lossesClassification = AverageMeter()
@@ -377,6 +377,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
     acc_mini_batch = 0.0
     acc_mini_batch_top3 = 0.0
     totalSamplePerIter=0
+
     for i, (inputs, inputs_light, targets) in enumerate(train_loader):
         inputs=inputs.view(-1,length,3,input_size,input_size).transpose(1,2)
         inputs_light=inputs_light.view(-1,length,3,input_size,input_size).transpose(1,2)
@@ -401,6 +402,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
         loss_mini_batch_classification += lossClassification.data.item()
         totalLoss.backward()
         totalSamplePerIter +=  output.size(0)
+
         if (i+1) % args.iter_size == 0:
             # compute gradient and do SGD step
             optimizer.step()
@@ -473,6 +475,7 @@ def validate(val_loader, model, criterion,epoch):
         with open('validate_record_%s.csv' % suffix, 'a', newline='') as f:
             record = csv.writer(f)
             record.writerow([epoch, round(top1.avg,3), round(top5.avg,3), round(lossesClassification.avg,4)])
+            
     return top1.avg, top5.avg, lossesClassification.avg
 
 def save_checkpoint(state, is_best, filename, resume_path):
