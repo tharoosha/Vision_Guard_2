@@ -27,7 +27,7 @@ import torch.utils.data
 from tensorboardX import SummaryWriter
 
 from torch.optim import lr_scheduler
-import video_transforms
+import vidoe_transforms
 import models
 import datasets
 #import swats
