@@ -14,6 +14,8 @@ import argparse
 import shutil
 import numpy as np
 
+from ml_models.vidoe_transforms import video_transforms
+
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -246,7 +248,7 @@ def main():
         train_dataset,
         batch_size=args.batch_size, shuffle=True,
         num_workers=args.workers, pin_memory=True)
-    print(train_loader)
+    # print(train_loader)
     val_loader = torch.utils.data.DataLoader(
         val_dataset,
         batch_size=args.batch_size, shuffle=False,
