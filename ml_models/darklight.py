@@ -31,7 +31,7 @@ from tensorboardX import SummaryWriter
 from torch.optim import lr_scheduler
 import vidoe_transforms
 import models
-import datasets
+import data
 #import swats
 from opt.AdamW import AdamW
 
@@ -45,7 +45,7 @@ model_names = sorted(name for name in models.__dict__
     if not name.startswith("__")
     and callable(models.__dict__[name]))
 
-dataset_names = sorted(name for name in datasets.__all__)
+dataset_names = sorted(name for name in data.__all__)
 
 parser = argparse.ArgumentParser(description='PyTorch Two-Stream Action Recognition')
 
@@ -216,7 +216,7 @@ def main():
     if not os.path.exists(train_split_file) or not os.path.exists(val_split_file):
         print("No split file exists in %s directory. Preprocess the dataset first" % (args.settings))
     #ARID.py
-    train_dataset = datasets.__dict__[args.dataset](root=dataset,
+    train_dataset = data.__dict__[args.dataset](root=dataset,
                                                     modality="rgb",
                                                     source=train_split_file,
                                                     phase="train",
@@ -228,7 +228,7 @@ def main():
                                                     num_segments=args.num_seg,
                                                     gamma=args.gamma)
     
-    val_dataset = datasets.__dict__[args.dataset](root=dataset,
+    val_dataset = data.__dict__[args.dataset](root=dataset,
                                                   modality="rgb",
                                                   source=val_split_file,
                                                   phase="val",

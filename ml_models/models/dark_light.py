@@ -21,7 +21,7 @@ class dark_light(nn.Module):
         self.both_flow=both_flow
 
         self.avgpool = nn.AvgPool3d((1, 7, 7), stride=1)
-        #预训练
+        # pre-training
         self.features=nn.Sequential(*list(
             r2plus1d_34_32_ig65m(359, pretrained=True, progress=True).children())[:-2])
         #self.features=nn.Sequential(*list(
@@ -30,6 +30,7 @@ class dark_light(nn.Module):
             max_length = 16
         elif self.both_flow == 'False':
             max_length  = 8
+            
         self.self_attention = self_attention(self.hidden_size, max_length , hidden=self.hidden_size, n_layers=self.n_layers, attn_heads=self.attn_heads)
         print(sum(p.numel() for p in self.self_attention.parameters() if p.requires_grad))
         self.fc_action = nn.Linear(self.hidden_size, num_classes)
