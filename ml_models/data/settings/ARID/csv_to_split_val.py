@@ -12,11 +12,12 @@ def csv_deal(csv_file:str,csv_type):
         with open(save_txt, 'w') as write_txt:
             for line in reader:
                 parts = line.strip().split('\t')
-                # print(parts[0])
+                print(parts[-1][:-4])
                 
                 VideoID = parts[0]
                 ClassID = parts[1]
-                Video = parts[2][:-4]
+                Video = parts[-1][:-4]
+
                 # print(VideoID,Video,ClassID)
                 # Extract the video file name
                 # video_path = parts[2]
@@ -27,12 +28,15 @@ def csv_deal(csv_file:str,csv_type):
                 # label = line["ClassID"]  # Video type
                 # name = line["Video"][:-4]  # Video name
                 # print(path+name)
+
+                print(path+Video)
                 duration = str(len(os.listdir(path+Video)))
-                write_thing=VideoID+' '+duration+' '+ClassID+'\n'
+                # write_thing=VideoID+' '+duration+' '+ClassID+'\n'
+                
                 # write_thing=name+' '+label+'\n'
                 # print("Writing: Video: "+name+' Label:'+label)
                 # print("Writing: Video: "+name+' Frame number:'+duration+' Label:'+label)
-                write_txt.write(write_thing)
+                # write_txt.write(write_thing)
                 # print(write_thing)
 
 # csv_deal("datasets/settings/ARID/ARID1.1_t1_train_pub.csv","datasets/settings/ARID/train")
