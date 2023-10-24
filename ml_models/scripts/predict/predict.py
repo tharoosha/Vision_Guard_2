@@ -13,7 +13,7 @@ import torchvision.datasets as datasets
 from sklearn.metrics import confusion_matrix
 
 print(torch.cuda.is_available())
-device = 'mps' if torch.backends.mps.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else "cpu"
 
 # datasetFolder="../../datasets"
 # sys.path.insert(0, "../../")

@@ -37,8 +37,8 @@ from opt.AdamW import AdamW
 
 import csv
 
-# device = 'mps' if torch.backends.mps.is_available() else "cpu"
-device = "cpu"
+device = 'cuda' if torch.cuda.is_available() else "cpu"
+# device = "cpu"
 
 
 model_names = sorted(name for name in models.__dict__

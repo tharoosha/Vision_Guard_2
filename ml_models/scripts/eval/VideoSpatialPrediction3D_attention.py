@@ -16,7 +16,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-device = 'mps' if torch.backends.mps.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else "cpu"
 
 sys.path.insert(0, "../../")
 import video_transforms

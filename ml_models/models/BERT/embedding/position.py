@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch
 import math
 
-device = 'mps' if torch.backends.mps.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else "cpu"
 
     
 class LearnedPositionalEmbedding2(nn.Module):
@@ -12,7 +12,7 @@ class LearnedPositionalEmbedding2(nn.Module):
 
         # Compute the positional encodings once in log space.
         # pe = torch.zeros(max_len, d_model).float().to(device='cuda')
-        pe = torch.zeros(max_len, d_model).float().to(device='mps')
+        pe = torch.zeros(max_len, d_model).float().to(device)
         pe.require_grad = True
         pe = pe.unsqueeze(0)
         self.pe=nn.Parameter(pe)
