@@ -178,7 +178,7 @@ def main():
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
 
     print("Saving everything to directory %s." % (saveLocation))
-    dataset='dataset/ARID_frames'
+    dataset='data/ARID_frames'
     
     cudnn.benchmark = True
     length=64
