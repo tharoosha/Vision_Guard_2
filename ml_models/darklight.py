@@ -66,7 +66,7 @@ parser.add_argument('-s', '--split', default=1, type=int, metavar='S',
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 2)')
 
-parser.add_argument('--epochs', default=200, type=int, metavar='N',
+parser.add_argument('--epochs', default=20, type=int, metavar='N',
                     help='number of total epochs to run')
 
 parser.add_argument('-b', '--batch-size', default=3, type=int,
@@ -181,7 +181,7 @@ def main():
     dataset='data/ARID_frames'
     
     cudnn.benchmark = True
-    length=64
+    length=30
     
     # Data transforming
     is_color = True
