@@ -14,9 +14,6 @@ import argparse
 import shutil
 import numpy as np
 
-from video_transforms import video_transforms
-
-
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
