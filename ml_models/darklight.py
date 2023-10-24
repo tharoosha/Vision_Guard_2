@@ -14,7 +14,7 @@ import argparse
 import shutil
 import numpy as np
 
-from ml_models.vidoe_transforms import video_transforms
+from video_transforms import video_transforms
 
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -29,7 +29,7 @@ import torch.utils.data
 from tensorboardX import SummaryWriter
 
 from torch.optim import lr_scheduler
-import vidoe_transforms
+import video_transforms
 import models
 import data
 #import swats
