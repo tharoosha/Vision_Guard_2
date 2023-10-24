@@ -5,6 +5,9 @@ def csv_deal(csv_file:str,csv_type):
     with open(csv_file, newline="") as split_f:
         reader = csv.DictReader(split_f)   #Use the first row as the key value
         save_txt=csv_type + '_' + "split1" + ".txt"
+
+
+
         with open(save_txt, 'w') as write_txt:
             for i,line in enumerate(reader):
                 label = line["ClassID"]  # Video type
