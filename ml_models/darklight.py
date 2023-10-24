@@ -192,8 +192,7 @@ def main():
     clip_mean = [0.485, 0.456, 0.406] * args.num_seg * length
     clip_std = [0.229, 0.224, 0.225] * args.num_seg * length
 
-    normalize = video_transforms.Normalize(mean=clip_mean,
-                                           std=clip_std)
+    normalize = video_transforms.Normalize(mean=clip_mean, std=clip_std)
 
     train_transform = video_transforms.Compose([
             video_transforms.MultiScaleCrop((input_size, input_size), scale_ratios),

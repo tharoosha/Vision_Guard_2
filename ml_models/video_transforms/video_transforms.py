@@ -84,7 +84,7 @@ class Reset(object):
         mask=np.random.binomial(1, self.mask_prob, self.num_seg).repeat(3)
         return clips*mask
 
-#进了
+#Entered
 class Normalize(object):
     """Given mean: (R, G, B) and std: (R, G, B),
     will normalize each channel of the torch.*Tensor, i.e.
@@ -210,7 +210,7 @@ class Scale(object):
                 scaled_clips[:,:,frame_id:frame_id+1] = cv2.resize(cur_img, (new_w, new_h), self.interpolation)
         return scaled_clips
 
-#进了
+#Entered
 class CenterCrop(object):
     """Crops the given numpy array at the center to have a region of
     the given size. size can be a tuple (target_height, target_width)
