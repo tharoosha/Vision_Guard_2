@@ -205,13 +205,13 @@ def main():
         ])
 
     # data loading
-    train_setting_file = "train_split%d.txt" % (args.split)
+    train_setting_file = "train_split%d_reduced.txt" % (args.split)
     train_split_file = os.path.join(args.settings, args.dataset, train_setting_file)
-    val_setting_file = "val_split%d.txt" % (args.split)
+    val_setting_file = "val_split%d_reduced.txt" % (args.split)
     val_split_file = os.path.join(args.settings, args.dataset, val_setting_file)
     if not os.path.exists(train_split_file) or not os.path.exists(val_split_file):
         print("No split file exists in %s directory. Preprocess the dataset first" % (args.settings))
-    #ARID.py
+    # ARID.py
     train_dataset = data.__dict__[args.dataset](root=dataset,
                                                     modality="rgb",
                                                     source=train_split_file,
