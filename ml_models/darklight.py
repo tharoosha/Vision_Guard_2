@@ -181,7 +181,7 @@ def main():
     dataset='data/ARID_frames'
     
     cudnn.benchmark = True
-    length=64
+    length=30
     
     # Data transforming
     is_color = True
