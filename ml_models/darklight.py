@@ -46,7 +46,7 @@ dataset_names = sorted(name for name in data.__all__)
 
 parser = argparse.ArgumentParser(description='PyTorch Two-Stream Action Recognition')
 
-parser.add_argument('--settings', metavar='DIR', default='./datasets/settings',
+parser.add_argument('--settings', metavar='DIR', default='./data/settings',
                     help='path to dataset setting files')
 parser.add_argument('--dataset', '-d', default='ARID',
                     choices=["ucf101", "hmdb51", "smtV2", "window", "ARID"],
@@ -178,7 +178,7 @@ def main():
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
 
     print("Saving everything to directory %s." % (saveLocation))
-    dataset='datasets/ARID_frames'
+    dataset='dataset/ARID_frames'
     
     cudnn.benchmark = True
     length=64
