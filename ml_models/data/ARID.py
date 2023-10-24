@@ -6,7 +6,7 @@ import random
 import numpy as np
 import cv2
 
-from. import img_to_gamma
+import img_to_gamma
 
 def find_classes(dir):
     classes = [d for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))]
