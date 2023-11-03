@@ -220,7 +220,7 @@ def r2plus1d_34_32_ig65m(num_classes, pretrained=False, progress=False):
                        pretrained=pretrained, progress=progress)
 
 def r2plus1d_34(num_classes, pretrained=False, progress=False, arch=None):
-    #构造r2plus1d模型
+    # Construct r2plus1d model
     model = VideoResNet(block=BasicBlock,
                         conv_makers=[Conv2Plus1D] * 4,
                         layers=[3, 4, 6, 3],

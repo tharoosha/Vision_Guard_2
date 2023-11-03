@@ -57,11 +57,11 @@ class self_attention(nn.Module):
         # torch.ByteTensor([batch_size, 1, seq_len, seq_len)
         batch_size=input_vectors.shape[0]
         sample=None
-        if self.training:#bernolliMatrix = [[1,0.8,0.8……]](3,9)
+        if self.training: # bernolliMatrix = [[1,0.8,0.8……]](3,9)
             # bernolliMatrix=torch.cat((torch.tensor([1]).float().cuda(), (torch.tensor([self.mask_prob]).float().cuda()).repeat(self.max_len)), 0).unsqueeze(0).repeat([batch_size,1])
             bernolliMatrix=torch.cat((torch.tensor([1]).float().to(device), (torch.tensor([self.mask_prob]).float().to(device)).repeat(self.max_len)), 0).unsqueeze(0).repeat([batch_size,1])
-            self.bernolliDistributor=torch.distributions.Bernoulli(bernolliMatrix) #均值bernolliMatrix方差[[0,0.4,0.4……]]
-            sample=self.bernolliDistributor.sample()#[3,9] 0，1分布
+            self.bernolliDistributor=torch.distributions.Bernoulli(bernolliMatrix) #Mean bernolliMatrix variance [[0,0.4,0.4……]]
+            sample=self.bernolliDistributor.sample()#[3,9] 0,1 distribution
             mask = (sample > 0).unsqueeze(1).repeat(1, sample.size(1), 1).unsqueeze(1)#[3,1,9,9]
         else:
             # mask=torch.ones(batch_size,1,self.max_len+1,self.max_len+1).cuda()

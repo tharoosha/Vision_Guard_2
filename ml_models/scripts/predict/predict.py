@@ -117,7 +117,7 @@ def main():
         csv_list = f.readlines()
 
     f_val = open(val_file, newline="")
-    reader = csv.DictReader(f_val)  # 把第一行作为key值
+    reader = csv.DictReader(f_val)  # Use the first row as the key value
     print("we got %d test videos" % (len(csv_list)-1))
 
     line_id = 1
@@ -136,7 +136,7 @@ def main():
         vdeio_name = str(line["VideoID"])+".mp4"
         vdeio_dir = line["VideoID"]
         clip_path = os.path.join(data_dir, vdeio_dir)
-        duration = line["duration"] #帧长
+        duration = line["duration"] #Frame length
         input_video_label = None
 
         start = time.time()

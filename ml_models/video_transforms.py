@@ -85,6 +85,7 @@ class Reset(object):
         return clips*mask
 
 #Entered
+
 class Normalize(object):
     """Given mean: (R, G, B) and std: (R, G, B),
     will normalize each channel of the torch.*Tensor, i.e.
@@ -106,6 +107,7 @@ class Normalize(object):
         # for t, m, s in zip(tensor, self.mean, self.std):
         #     t.sub_(m).div_(s)
         return tensor2
+    
 class DeNormalize(object):
     """Given mean: (R, G, B) and std: (R, G, B),
     will normalize each channel of the torch.*Tensor, i.e.
@@ -210,7 +212,9 @@ class Scale(object):
                 scaled_clips[:,:,frame_id:frame_id+1] = cv2.resize(cur_img, (new_w, new_h), self.interpolation)
         return scaled_clips
 
+
 #Entered
+
 class CenterCrop(object):
     """Crops the given numpy array at the center to have a region of
     the given size. size can be a tuple (target_height, target_width)
@@ -344,7 +348,7 @@ class RandomSizedCrop(object):
         crop = CenterCrop(self.size)
         return crop(scale(clips))
 
-#进了
+# Enter
 class MultiScaleCrop(object):
     """
     Description: Corner cropping and multi-scale cropping. Two data augmentation techniques introduced in:

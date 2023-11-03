@@ -50,14 +50,18 @@ class dark_light(nn.Module):
 
             x = self.features(x)        #x(b,512,8,7,7)
             x_light = self.features(x_light)        #x(b,512,8,7,7)
+            
             # x = x * self.fuse_weights[0] + x_light * self.fuse_weights[1]
             x = self.avgpool(x)  # b,512,8,1,1
             x = x.view(x.size(0), self.hidden_size, 8)  # x(b,512,8)
             x = x.transpose(1, 2)  # x(b,8,512)
+            
             x_light = self.avgpool(x_light)  # b,512,8,1,1
             x_light = x_light.view(x_light.size(0), self.hidden_size, 8)  # x(b,512,8)
             x_light = x_light.transpose(1, 2)  # x
+            
             x_cat = torch.cat((x,x_light),1)
+            
             output, maskSample = self.self_attention(x_cat)  # output(b,9,512),masksample(b,9)
         elif self.both_flow == 'False':
             _,x=x

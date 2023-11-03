@@ -15,13 +15,13 @@ for name in vedio_names:
         print("Cannot open camera")
         exit()
     while True:
-        # 逐帧捕获
+        # Capture frame by frame
         ret, frame = cap.read()
-        # 如果正确读取帧，ret为True
+        # If the frame is read correctly, ret is True
         if not ret:
             print("视频 %s 处理完成"%name)
             break
         cv2.imwrite(vedio_path+'\img_{0:05d}.jpg'.format(i),frame)
         i+=1
-    # 完成所有操作后，释放捕获器
+    # After all operations are completed, release the capturer    
     cap.release()

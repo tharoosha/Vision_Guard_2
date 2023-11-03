@@ -26,7 +26,9 @@ import torch.utils.data
 from tensorboardX import SummaryWriter
 
 from torch.optim import lr_scheduler
+
 import video_transforms
+
 import models
 import data
 #import swats
@@ -35,7 +37,6 @@ from opt.AdamW import AdamW
 import csv
 
 device = 'cuda' if torch.cuda.is_available() else "cpu"
-# device = "cpu"
 
 
 model_names = sorted(name for name in models.__dict__
@@ -46,7 +47,9 @@ dataset_names = sorted(name for name in data.__all__)
 
 parser = argparse.ArgumentParser(description='PyTorch Two-Stream Action Recognition')
 
-parser.add_argument('--settings', metavar='DIR', default='./data/settings',
+
+
+parser.add_argument('--settings', metavar='DIR', default='./ml_models/data/settings',
                     help='path to dataset setting files')
 parser.add_argument('--dataset', '-d', default='ARID',
                     choices=["ucf101", "hmdb51", "smtV2", "window", "ARID"],
@@ -144,7 +147,7 @@ def main():
     width = 170
     height = 128
 
-    saveLocation="./checkpoint/"+args.dataset+"_"+args.arch+"_split"+str(args.split)
+    saveLocation="./ml_models/checkpoint/"+args.dataset+"_"+args.arch+"_split"+str(args.split)
 
     if not os.path.exists(saveLocation):
         os.makedirs(saveLocation)
@@ -174,7 +177,8 @@ def main():
     # criterion = nn.CrossEntropyLoss().cuda()
     criterion = nn.CrossEntropyLoss().to(device)
 
-    
+    # Reduce learning rate when a metric has stopped improving. Models often benefit from 
+    # reducing the learning rate by a factor of 2-10 once learning stagnates.
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
 
     print("Saving everything to directory %s." % (saveLocation))
@@ -308,9 +312,9 @@ def build_model():
     #args.arch：dark_light
     model = models.__dict__[args.arch](num_classes=11, length=args.num_seg, both_flow=args.both_flow)
     
-    # if torch.cuda.device_count() > 1:
-        # model=torch.nn.DataParallel(model)
-    model=torch.nn.DataParallel(model)
+    if torch.cuda.device_count() > 1:
+        model=torch.nn.DataParallel(model)
+    # model=torch.nn.DataParallel(model)
     # model = model.cuda()
     model = model.to(device)
 

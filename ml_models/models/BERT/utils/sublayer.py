@@ -1,7 +1,7 @@
 import torch.nn as nn
 from .layer_norm import LayerNorm
 
-#进了
+# Entered
 class SublayerConnection(nn.Module):
     """
     A residual connection followed by a layer norm.

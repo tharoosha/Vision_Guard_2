@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 
-#进了
+# Entered
 class LayerNorm(nn.Module):
     "Construct a layernorm module (See citation for details)."
 
